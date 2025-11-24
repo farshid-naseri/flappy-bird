@@ -1,7 +1,26 @@
+import { useEffect, useState, useRef } from "react";
 import { useGameStore } from "../../store/gameStore";
+import { useScoring } from "../../hooks";
 
 export function ScoreHUD() {
   const { score, highScore, milestones } = useGameStore();
+  const [celebratingMilestone, setCelebratingMilestone] = useState<number | null>(null);
+  const previousScoreRef = useRef(score);
+  
+  useScoring();
+
+  useEffect(() => {
+    if (score > previousScoreRef.current) {
+      const justReachedMilestone = milestones.find(
+        (m) => score >= m && previousScoreRef.current < m
+      );
+      if (justReachedMilestone) {
+        setCelebratingMilestone(justReachedMilestone);
+        setTimeout(() => setCelebratingMilestone(null), 2000);
+      }
+    }
+    previousScoreRef.current = score;
+  }, [score, milestones]);
 
   const getMilestoneStatus = (milestone: number): "reached" | "next" | "future" => {
     if (score >= milestone) return "reached";
@@ -10,7 +29,14 @@ export function ScoreHUD() {
   };
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-hud-border bg-hud-bg/90 p-4 shadow-hud backdrop-blur-sm">
+    <div className="relative flex flex-col gap-3 rounded-xl border border-hud-border bg-hud-bg/90 p-4 shadow-hud backdrop-blur-sm">
+      {celebratingMilestone && (
+        <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-glow-teal/20 backdrop-blur-sm animate-pulse">
+          <div className="text-4xl font-bold text-glow-teal drop-shadow-lg">
+            🎉 {celebratingMilestone} Points! 🎉
+          </div>
+        </div>
+      )}
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col">
           <span className="text-xs font-semibold uppercase tracking-wide text-white/60">

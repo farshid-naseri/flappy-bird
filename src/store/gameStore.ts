@@ -49,20 +49,20 @@ const HIGH_SCORE_STORAGE_KEY = "flappy_bird_high_score";
 
 export const DIFFICULTY_PRESETS: Record<Difficulty, DifficultyParams> = {
   easy: {
-    gapSize: 120,
+    gapSize: 150,
     pipeSpeed: 3,
     gravity: 0.4,
     flapForce: 8,
   },
   medium: {
-    gapSize: 100,
-    pipeSpeed: 4.5,
+    gapSize: 120,
+    pipeSpeed: 4,
     gravity: 0.5,
     flapForce: 7,
   },
   hard: {
-    gapSize: 80,
-    pipeSpeed: 6,
+    gapSize: 100,
+    pipeSpeed: 5,
     gravity: 0.6,
     flapForce: 6,
   },

@@ -46,12 +46,39 @@ export function CanvasGame() {
     return () => window.removeEventListener("resize", resize);
   }, []);
 
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.code === "Space" && gamePhase === "playing") {
+        e.preventDefault();
+        flap();
+      }
+    };
+
+    const handleClick = () => {
+      if (gamePhase === "playing") {
+        flap();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    const canvas = canvasRef.current;
+    canvas?.addEventListener("click", handleClick);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+      canvas?.removeEventListener("click", handleClick);
+    };
+  }, [gamePhase, flap]);
+
   useAnimationFrame((delta) => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext("2d");
     if (!canvas || !context) return;
 
     const { width, height } = canvas.getBoundingClientRect();
+    
+    const gameState = update(delta, width, height);
+    
     context.clearRect(0, 0, width, height);
 
     const gradient = context.createLinearGradient(0, 0, 0, height);
@@ -61,13 +88,13 @@ export function CanvasGame() {
     context.fillStyle = gradient;
     context.fillRect(0, 0, width, height);
 
-    context.fillStyle = "rgba(255, 255, 255, 0.8)";
+    context.fillStyle = "rgba(255, 255, 255, 0.3)";
     starsRef.current.forEach((star) => {
       context.beginPath();
       context.arc(star.x, star.y, star.size, 0, Math.PI * 2);
       context.fill();
 
-      const modifier = snapshot.pointer.isDown ? 2 : 1;
+      const modifier = gamePhase === "playing" ? 1.5 : 1;
       star.y += star.speed * delta * 0.05 * modifier;
       if (star.y > height) star.y = -star.size;
       star.x += (snapshot.keys.has("arrowright") ? 1 : 0) * 0.1 * delta;
@@ -76,12 +103,25 @@ export function CanvasGame() {
       if (star.x < 0) star.x = width;
     });
 
-    context.fillStyle = snapshot.pointer.isDown
-      ? "rgba(255, 214, 165, 0.9)"
-      : "rgba(95, 239, 247, 0.8)";
+    gameState.pipes.forEach((pipe) => {
+      context.fillStyle = "rgba(76, 175, 80, 0.9)";
+      context.fillRect(pipe.x, 0, 60, pipe.gapY);
+      context.fillRect(pipe.x, pipe.gapY + pipe.gapSize, 60, height - (pipe.gapY + pipe.gapSize));
+      
+      context.strokeStyle = "rgba(56, 142, 60, 1)";
+      context.lineWidth = 3;
+      context.strokeRect(pipe.x, 0, 60, pipe.gapY);
+      context.strokeRect(pipe.x, pipe.gapY + pipe.gapSize, 60, height - (pipe.gapY + pipe.gapSize));
+    });
+
+    context.fillStyle = "rgba(255, 214, 0, 0.95)";
     context.beginPath();
-    context.arc(snapshot.pointer.x, snapshot.pointer.y, 6, 0, Math.PI * 2);
+    context.arc(gameState.bird.x, gameState.bird.y, gameState.bird.radius, 0, Math.PI * 2);
     context.fill();
+    
+    context.strokeStyle = "rgba(255, 152, 0, 1)";
+    context.lineWidth = 2;
+    context.stroke();
   }, true);
 
   return (
