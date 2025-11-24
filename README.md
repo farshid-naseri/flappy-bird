@@ -1,125 +1,92 @@
-# Flappy Bird Game
+# Game Project
 
-A Flappy Bird game implementation built with React, TypeScript, and Canvas API.
+A modern game built with React 19, TypeScript, Tailwind CSS 4, and Zustand.
+
+## Tech Stack
+
+- **React 19** – Latest version with concurrent features
+- **TypeScript** – Strict type checking for better DX
+- **Vite** – Fast build tooling and HMR
+- **Tailwind CSS 4** – Next-gen utility-first CSS framework
+- **Zustand** – Lightweight state management
+- **ESLint** – Linting with TypeScript support
+- **Vitest** – Fast unit testing
+
+## Project Structure
+
+```
+src/
+├── assets/           # Sprites, audio, and other assets
+│   ├── sprites/
+│   └── audio/
+├── components/
+│   ├── layout/       # Layout components (TopHUD, SidePanel, GameLayout)
+│   └── ui/           # UI controls (AudioControls, GamePhaseControls)
+├── hooks/            # Custom React hooks (useAnimationFrame, useInput, useKeyboard)
+├── store/            # Zustand stores (gameStore)
+├── App.tsx           # Main app component
+├── main.tsx          # React entry point
+└── index.css         # Global styles with Tailwind imports
+```
 
 ## Features
 
-### Core Gameplay
-- **Canvas-based rendering** with smooth 60fps animations
-- **Bird physics** with gravity, flap impulse, and rotation based on velocity
-- **Pipe generation** with randomized gaps and consistent spacing
-- **Parallax scrolling** background layers (clouds and ground)
-- **Delta-time animations** for frame-independent gameplay
+### Layout
+- **Top HUD**: Displays score, high score, difficulty, and game phase
+- **Canvas Playfield**: Main game area with responsive canvas rendering
+- **Side Panels**: Left and right panels for controls and information
 
-### Collision Detection
-- **Precise AABB/circle collision** between bird and pipes
-- **Boundary collision** with ground and ceiling
-- **Visual feedback** with flash effect on collision
-- **State transitions**: ready → running → hit → game over
+### State Management (Zustand)
+- Game phase (menu, playing, paused, gameOver)
+- Difficulty levels (easy, medium, hard)
+- Audio settings (master, music, SFX volumes + mute toggle)
+- Score tracking
 
-### Game State Management
-- **Zustand store** for centralized state management
-- **Configurable physics parameters** (gravity, jump impulse, pipe speed, etc.)
-- **Score tracking** with high score persistence
-- **Game control actions** (start, pause, resume, reset)
+### Utility Hooks
+- `useAnimationFrame`: Request animation frame with delta time
+- `useInput`: Unified keyboard and pointer input tracking
+- `useKeyboard`: Simple keyboard event handling
 
-### Controls
-- **Space bar** or **click** to flap/jump
-- **Click to start** and **click to restart** functionality
+### Tailwind Theme
+Custom color tokens and gradients for parallax layers:
+- Color palette with OKLCH for better perceptual uniformity
+- Background gradients for sky, hills, and foreground parallax
+- HUD styling with backdrop blur and shadows
 
-## Technical Implementation
-
-### Architecture
-- **Component-based** React architecture
-- **TypeScript** for type safety
-- **Canvas API** for game rendering
-- **Zustand** for state management
-- **Vite** for build tooling
-
-### Key Files
-- `src/components/CanvasGame.tsx` - Main game component with render loop
-- `src/stores/gameStore.ts` - Zustand store for game state
-- `src/utils/gamePhysics.ts` - Physics calculations and collision detection
-- `src/types/game.ts` - TypeScript type definitions
-
-### Physics
-- **Gravity**: 980 pixels/second²
-- **Jump impulse**: -350 pixels/second  
-- **Pipe speed**: 150 pixels/second
-- **Bird rotation**: Based on velocity (-0.5 to 0.5 radians)
-
-## Testing
-
-Unit tests are included for key utility functions:
+## Getting Started
 
 ```bash
-npm test
-```
-
-Tests cover:
-- Collision detection algorithms
-- Physics calculations
-- Pipe gap generation
-- Boundary checks
-
-## Development
-
-### Installation
-```bash
+# Install dependencies
 npm install
-```
 
-### Development Server
-```bash
-npm start
-```
+# Start dev server (http://localhost:5173)
+npm run dev
 
-### Build
-```bash
+# Build for production
 npm run build
-```
 
-### Type Checking
-```bash
-npm run type-check
-```
+# Preview production build
+npm run preview
 
-### Linting
-```bash
+# Run tests
+npm test
+
+# Run linter
 npm run lint
 ```
 
-## Game Configuration
+## Development
 
-The game supports configurable parameters that can be adjusted per difficulty:
+- Interactive demo in canvas: stars scroll, respond to arrow keys and pointer input
+- Modify game state via UI controls in side panels
+- All state persists in Zustand store
+- Canvas uses `requestAnimationFrame` for smooth rendering
 
-```typescript
-interface GameConfig {
-  gravity: number;        // Gravity strength
-  jumpImpulse: number;    // Jump/flap strength
-  pipeSpeed: number;      // Speed of pipes
-  pipeGap: number;        // Size of gap between pipes
-  pipeWidth: number;      // Width of pipes
-  pipeInterval: number;   // Distance between pipes
-  backgroundSpeed: number; // Parallax background speed
-  groundSpeed: number;    // Ground scrolling speed
-  birdRadius: number;     // Bird size
-  canvasWidth: number;    // Game canvas width
-  canvasHeight: number;   // Game canvas height
-}
-```
+## Next Steps
 
-## Performance
-
-- **Frame-independent** animations using delta time
-- **Efficient collision detection** with early exit optimization
-- **Optimized rendering** with minimal canvas operations
-- **Smooth 60fps** gameplay on modern browsers
-
-## Browser Support
-
-- Modern browsers with Canvas API support
-- Chrome 60+
-- Firefox 55+
-- Safari 12+
-- Edge 79+
+- Implement actual game logic
+- Add sprite rendering system
+- Integrate audio playback
+- Implement collision detection
+- Add parallax background layers
+- Create game entities (player, obstacles, collectibles)
