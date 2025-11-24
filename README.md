@@ -1,233 +1,125 @@
-# Game Audio System
+# Flappy Bird Game
 
-A comprehensive Web Audio API-based audio system for browser games with React and Zustand state management.
+A Flappy Bird game implementation built with React, TypeScript, and Canvas API.
 
 ## Features
 
-- 🎵 **Background Music**: Looping BGM with play/stop controls
-- 🔊 **Sound Effects**: Support for flap, collision, and milestone sounds
-- 🎚️ **Volume Controls**: Separate sliders for music and effects
-- 🔇 **Global Mute**: Toggle to mute all audio
-- 🌐 **Browser Compatible**: Gracefully handles browser audio restrictions
-- 🎮 **Game Integration**: Easy-to-use hooks for gameplay events
-- ✅ **Tested**: Unit tests for core audio functionality
+### Core Gameplay
+- **Canvas-based rendering** with smooth 60fps animations
+- **Bird physics** with gravity, flap impulse, and rotation based on velocity
+- **Pipe generation** with randomized gaps and consistent spacing
+- **Parallax scrolling** background layers (clouds and ground)
+- **Delta-time animations** for frame-independent gameplay
 
-## Installation
+### Collision Detection
+- **Precise AABB/circle collision** between bird and pipes
+- **Boundary collision** with ground and ceiling
+- **Visual feedback** with flash effect on collision
+- **State transitions**: ready → running → hit → game over
 
-```bash
-npm install
-```
+### Game State Management
+- **Zustand store** for centralized state management
+- **Configurable physics parameters** (gravity, jump impulse, pipe speed, etc.)
+- **Score tracking** with high score persistence
+- **Game control actions** (start, pause, resume, reset)
 
-## Usage
+### Controls
+- **Space bar** or **click** to flap/jump
+- **Click to start** and **click to restart** functionality
 
-### Basic Setup
+## Technical Implementation
 
-The audio system initializes automatically when you use the `useGameAudio` hook:
+### Architecture
+- **Component-based** React architecture
+- **TypeScript** for type safety
+- **Canvas API** for game rendering
+- **Zustand** for state management
+- **Vite** for build tooling
 
-```tsx
-import { useGameAudio } from './hooks/useGameAudio';
+### Key Files
+- `src/components/CanvasGame.tsx` - Main game component with render loop
+- `src/stores/gameStore.ts` - Zustand store for game state
+- `src/utils/gamePhysics.ts` - Physics calculations and collision detection
+- `src/types/game.ts` - TypeScript type definitions
 
-function Game() {
-  const { playFlap, playCollision, playMilestone, handleUserInteraction } = useGameAudio({
-    bgmUrl: '/audio/bgm.mp3',
-    flapUrl: '/audio/flap.mp3',
-    collisionUrl: '/audio/collision.mp3',
-    milestoneUrl: '/audio/milestone.mp3',
-  });
-
-  // Handle user interaction (required by browsers before audio playback)
-  const handleStart = async () => {
-    await handleUserInteraction();
-    // Start game...
-  };
-
-  return (
-    <div>
-      <button onClick={handleStart}>Start Game</button>
-      <button onClick={playFlap}>Flap</button>
-    </div>
-  );
-}
-```
-
-### Audio Controls UI
-
-Include the `AudioControls` component to provide users with volume and mute controls:
-
-```tsx
-import { AudioControls } from './components/AudioControls';
-
-function App() {
-  return (
-    <div>
-      <AudioControls />
-      {/* Your game content */}
-    </div>
-  );
-}
-```
-
-### Gameplay Integration
-
-Hook audio cues into your gameplay events:
-
-```tsx
-// On flap input
-const handleFlap = async () => {
-  await playFlap();
-  // Update game state...
-};
-
-// On scoring
-const handleScore = async () => {
-  await playMilestone();
-  setScore(score + 1);
-};
-
-// On collision
-const handleCollision = async () => {
-  await playCollision();
-  setGameOver(true);
-};
-```
-
-## Architecture
-
-### AudioManager
-
-The core audio engine built on Web Audio API:
-
-- Loads and manages audio buffers
-- Handles background music playback
-- Plays sound effects on demand
-- Manages volume and mute state
-- Gracefully handles browser restrictions
-
-### Zustand Store
-
-Global state management for audio settings:
-
-```ts
-{
-  bgmVolume: number;      // 0-1
-  sfxVolume: number;      // 0-1
-  isMuted: boolean;
-  isBgmPlaying: boolean;
-  isInitialized: boolean;
-}
-```
-
-### React Hook
-
-`useGameAudio` hook provides a clean API for components:
-
-- Automatic initialization
-- User interaction handling
-- Sound effect playback helpers
-- Cleanup on unmount
-
-## Browser Compatibility
-
-The audio system gracefully handles browser autoplay restrictions:
-
-1. Audio context is created but won't play until user interaction
-2. Call `handleUserInteraction()` on first user click/tap
-3. Audio will work normally after that
-4. Falls back silently if audio is unavailable
+### Physics
+- **Gravity**: 980 pixels/second²
+- **Jump impulse**: -350 pixels/second  
+- **Pipe speed**: 150 pixels/second
+- **Bird rotation**: Based on velocity (-0.5 to 0.5 radians)
 
 ## Testing
 
-Run the test suite:
+Unit tests are included for key utility functions:
 
 ```bash
 npm test
 ```
 
 Tests cover:
-- AudioManager initialization and disposal
-- Volume control and clamping
-- Mute functionality
-- Background music playback
-- Sound effect playback
-- Error handling
-- Zustand store state management
+- Collision detection algorithms
+- Physics calculations
+- Pipe gap generation
+- Boundary checks
 
 ## Development
 
+### Installation
 ```bash
-# Start development server
-npm run dev
+npm install
+```
 
-# Build for production
+### Development Server
+```bash
+npm start
+```
+
+### Build
+```bash
 npm run build
+```
 
-# Type checking
-npm run typecheck
+### Type Checking
+```bash
+npm run type-check
+```
 
-# Linting
+### Linting
+```bash
 npm run lint
 ```
 
-## Audio File Requirements
+## Game Configuration
 
-Place your audio files in the `public/audio` directory:
+The game supports configurable parameters that can be adjusted per difficulty:
 
-- `bgm.mp3` - Background music (looping)
-- `flap.mp3` - Flap/jump sound effect
-- `collision.mp3` - Collision/death sound effect
-- `milestone.mp3` - Score/achievement sound effect
-
-Supported formats: MP3, WAV, OGG (browser-dependent)
-
-## API Reference
-
-### AudioManager
-
-```ts
-class AudioManager {
-  initialize(config?: AudioManagerConfig): Promise<void>
-  playBackgroundMusic(loop?: boolean): Promise<void>
-  stopBackgroundMusic(): void
-  toggleBackgroundMusic(): Promise<void>
-  playSound(type: SoundType): Promise<void>
-  setBgmVolume(volume: number): void
-  setSfxVolume(volume: number): void
-  setMuted(muted: boolean): void
-  handleUserInteraction(): Promise<void>
-  dispose(): void
+```typescript
+interface GameConfig {
+  gravity: number;        // Gravity strength
+  jumpImpulse: number;    // Jump/flap strength
+  pipeSpeed: number;      // Speed of pipes
+  pipeGap: number;        // Size of gap between pipes
+  pipeWidth: number;      // Width of pipes
+  pipeInterval: number;   // Distance between pipes
+  backgroundSpeed: number; // Parallax background speed
+  groundSpeed: number;    // Ground scrolling speed
+  birdRadius: number;     // Bird size
+  canvasWidth: number;    // Game canvas width
+  canvasHeight: number;   // Game canvas height
 }
 ```
 
-### useGameAudio Hook
+## Performance
 
-```ts
-function useGameAudio(options?: UseGameAudioOptions): {
-  handleUserInteraction: () => Promise<void>
-  playFlap: () => Promise<void>
-  playCollision: () => Promise<void>
-  playMilestone: () => Promise<void>
-  playSound: (type: SoundType) => Promise<void>
-  isInitialized: boolean
-}
-```
+- **Frame-independent** animations using delta time
+- **Efficient collision detection** with early exit optimization
+- **Optimized rendering** with minimal canvas operations
+- **Smooth 60fps** gameplay on modern browsers
 
-### useAudioStore
+## Browser Support
 
-```ts
-interface AudioState {
-  bgmVolume: number
-  sfxVolume: number
-  isMuted: boolean
-  isBgmPlaying: boolean
-  isInitialized: boolean
-  setBgmVolume: (volume: number) => void
-  setSfxVolume: (volume: number) => void
-  setMuted: (muted: boolean) => void
-  toggleBgm: () => Promise<void>
-  setInitialized: (initialized: boolean) => void
-}
-```
-
-## License
-
-MIT
+- Modern browsers with Canvas API support
+- Chrome 60+
+- Firefox 55+
+- Safari 12+
+- Edge 79+
