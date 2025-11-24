@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { CanvasGame } from "./components/CanvasGame";
-import { GameLayout } from "./components/layout/GameLayout";
+import { ResponsiveGameLayout } from "./components/layout/ResponsiveGameLayout";
 import { SidePanel } from "./components/layout/SidePanel";
 import { AudioControls } from "./components/ui/AudioControls";
 import { GamePhaseControls } from "./components/ui/GamePhaseControls";
@@ -29,7 +29,7 @@ export function App() {
   }, []);
 
   return (
-    <GameLayout
+    <ResponsiveGameLayout
       canvasElement={<CanvasGame />}
       leftPanel={
         <div className="flex flex-col gap-4">

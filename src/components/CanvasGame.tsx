@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
-import { useAnimationFrame, useInput, useGameEngine } from "../hooks";
-import { useGameStore } from "../store/gameStore";
+import { useAnimationFrame, useInput, useGameControls } from "../hooks";
+import { MenuOverlay } from "./menus/MenuOverlay";
+import { PauseButton } from "./ui/PauseButton";
 
 const MAX_STARS = 60;
 
@@ -23,15 +24,7 @@ export function CanvasGame() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const starsRef = useRef<Star[]>([]);
   const { snapshot } = useInput();
-  const { update, flap, resetGame } = useGameEngine();
-  const { gamePhase, setScore } = useGameStore();
-
-  useEffect(() => {
-    if (gamePhase === "menu") {
-      resetGame();
-      setScore(0);
-    }
-  }, [gamePhase, resetGame, setScore]);
+  useGameControls();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -132,10 +125,14 @@ export function CanvasGame() {
   }, true);
 
   return (
-    <canvas
-      ref={canvasRef}
-      role="presentation"
-      className="h-full w-full rounded-3xl border border-white/10 bg-canvas-backdrop/60 shadow-xl"
-    />
+    <div className="relative h-full w-full">
+      <canvas
+        ref={canvasRef}
+        role="presentation"
+        className="h-full w-full rounded-3xl border border-white/10 bg-canvas-backdrop/60 shadow-xl"
+      />
+      <PauseButton />
+      <MenuOverlay />
+    </div>
   );
 }

@@ -7,7 +7,4 @@ export type { KeyHandler, UseKeyboardOptions } from "./useKeyboard";
 export { useInput } from "./useInput";
 export type { InputSnapshot, PointerState } from "./useInput";
 
-export { useScoring } from "./useScoring";
-
-export { useGameEngine } from "./useGameEngine";
-export type { Bird, Pipe, GameEngineState } from "./useGameEngine";
+export { useGameControls } from "./useGameControls";

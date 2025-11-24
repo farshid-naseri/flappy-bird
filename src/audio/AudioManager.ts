@@ -27,7 +27,8 @@ export class AudioManager {
     }
 
     try {
-      this.context = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const AudioContextConstructor = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      this.context = new AudioContextConstructor();
       
       this.bgmGainNode = this.context.createGain();
       this.bgmGainNode.connect(this.context.destination);

@@ -96,7 +96,13 @@ export const useGameStore = create<GameState>((set, get) => ({
   milestones: [10, 25, 50, 100],
   isHydrated: false,
 
-  setGamePhase: (phase) => set({ gamePhase: phase }),
+  setGamePhase: (phase) => {
+    if (phase === "gameOver") {
+      const state = get();
+      state.updateHighScoreIfNeeded(state.score);
+    }
+    set({ gamePhase: phase });
+  },
   setDifficulty: (difficulty) => set({ difficulty }),
   updateAudioSettings: (settings) =>
     set((state) => ({

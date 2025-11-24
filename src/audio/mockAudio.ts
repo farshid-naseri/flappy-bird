@@ -4,6 +4,6 @@ export function generateSilentAudioBuffer(context: AudioContext, duration = 0.1)
   return buffer;
 }
 
-export function createMockAudioUrl(name: string): string {
+export function createMockAudioUrl(_name: string): string {
   return `data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=`;
 }
