@@ -6,3 +6,5 @@ export type { KeyHandler, UseKeyboardOptions } from "./useKeyboard";
 
 export { useInput } from "./useInput";
 export type { InputSnapshot, PointerState } from "./useInput";
+
+export { useGameControls } from "./useGameControls";
