@@ -8,11 +8,12 @@ import { ScoreHUD } from "./components/ui/ScoreHUD";
 import { useGameStore } from "./store/gameStore";
 
 function MissionBrief() {
-  const { difficulty } = useGameStore();
+  const { difficulty, getDifficultyParams } = useGameStore();
+  const params = getDifficultyParams();
   const copy = {
-    easy: "Ease into the journey with slower parallax layers and forgiving hit boxes.",
-    medium: "Balanced pacing with standard obstacle spacing and star speed.",
-    hard: "Full intensity with aggressive parallax velocity and precision flying.",
+    easy: `Gentle flight conditions with ${params.gapSize}px gaps and relaxed ${params.pipeSpeed}x speed. Perfect for training.`,
+    medium: `Balanced challenge with ${params.gapSize}px gaps and ${params.pipeSpeed}x speed. Standard mission parameters.`,
+    hard: `Extreme conditions with tight ${params.gapSize}px gaps and rapid ${params.pipeSpeed}x speed. Expert pilots only.`,
   } as const;
 
   return (
@@ -50,9 +51,10 @@ export function App() {
           </SidePanel>
           <SidePanel title="Tips">
             <ul className="list-disc space-y-1 pl-4 text-sm text-white/65">
-              <li>Use arrow keys or tap/click to influence the parallax drift.</li>
-              <li>Mastery requires watching how depth layers respond to input.</li>
-              <li>Boosts and enemies will be layered in these panels later.</li>
+              <li>Press SPACE or click the canvas to flap and stay airborne.</li>
+              <li>Navigate through the green pipe gaps to earn points.</li>
+              <li>Reach milestones (10, 25, 50, 100) for special recognition.</li>
+              <li>Choose your difficulty before starting - it locks during play.</li>
             </ul>
           </SidePanel>
         </div>

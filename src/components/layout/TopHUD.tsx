@@ -1,7 +1,7 @@
 import { useGameStore } from "../../store/gameStore";
 
 export function TopHUD() {
-  const { gamePhase, difficulty } = useGameStore();
+  const { gamePhase, difficulty, score, highScore } = useGameStore();
 
   return (
     <div className="flex items-center justify-between rounded-xl border border-hud-border bg-hud-bg/90 p-4 shadow-hud backdrop-blur-sm">
@@ -20,6 +20,16 @@ export function TopHUD() {
           <span className="text-xs font-medium uppercase tracking-wider text-white/70">
             {gamePhase}
           </span>
+        </div>
+      </div>
+      <div className="flex items-center gap-6">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-medium uppercase tracking-wider text-white/50">Score</span>
+          <span className="text-2xl font-bold text-white">{score}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-medium uppercase tracking-wider text-white/50">Best</span>
+          <span className="text-2xl font-bold text-glow-gold">{highScore}</span>
         </div>
       </div>
     </div>
