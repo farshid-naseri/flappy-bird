@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import { CanvasGame } from "./components/CanvasGame";
 import { GameLayout } from "./components/layout/GameLayout";
 import { SidePanel } from "./components/layout/SidePanel";
 import { AudioControls } from "./components/ui/AudioControls";
 import { GamePhaseControls } from "./components/ui/GamePhaseControls";
+import { ScoreHUD } from "./components/ui/ScoreHUD";
 import { useGameStore } from "./store/gameStore";
 
 function MissionBrief() {
@@ -21,11 +23,18 @@ function MissionBrief() {
 }
 
 export function App() {
+  useEffect(() => {
+    useGameStore.getState().hydrate();
+  }, []);
+
   return (
     <GameLayout
       canvasElement={<CanvasGame />}
       leftPanel={
         <div className="flex flex-col gap-4">
+          <SidePanel title="Score">
+            <ScoreHUD />
+          </SidePanel>
           <SidePanel title="Mission Control">
             <GamePhaseControls />
           </SidePanel>

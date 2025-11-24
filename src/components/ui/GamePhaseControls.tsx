@@ -7,6 +7,7 @@ const DIFFICULTIES = ["easy", "medium", "hard"] as const;
 export function GamePhaseControls() {
   const { gamePhase, difficulty, setGamePhase, setDifficulty } = useGameStore();
   const activeDifficultyIndex = useMemo(() => DIFFICULTIES.indexOf(difficulty), [difficulty]);
+  const isDifficultyDisabled = gamePhase === "playing" || gamePhase === "paused";
 
   return (
     <div className="flex flex-col gap-4">
@@ -31,15 +32,24 @@ export function GamePhaseControls() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <p className="text-xs font-semibold uppercase tracking-widest text-white/50">Difficulty</p>
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-semibold uppercase tracking-widest text-white/50">Difficulty</p>
+          {isDifficultyDisabled && (
+            <span className="text-xs font-medium uppercase tracking-widest text-yellow-500">
+              Locked
+            </span>
+          )}
+        </div>
         <div className="flex flex-col gap-2">
           {DIFFICULTIES.map((level) => (
             <label
               key={level}
               className={`flex cursor-pointer items-center justify-between rounded-xl border px-3 py-2 text-sm capitalize transition ${
-                level === difficulty
-                  ? "border-glow-teal bg-glow-teal/20 text-white"
-                  : "border-white/10 bg-white/5 text-white/60 hover:border-white/30"
+                isDifficultyDisabled
+                  ? "cursor-not-allowed border-white/5 bg-white/2 text-white/40"
+                  : level === difficulty
+                    ? "border-glow-teal bg-glow-teal/20 text-white"
+                    : "border-white/10 bg-white/5 text-white/60 hover:border-white/30"
               }`}
             >
               <span>{level}</span>
@@ -47,6 +57,7 @@ export function GamePhaseControls() {
                 type="radio"
                 checked={level === difficulty}
                 onChange={() => setDifficulty(level)}
+                disabled={isDifficultyDisabled}
                 style={{ accentColor: "oklch(0.72 0.11 200)" }}
               />
             </label>
